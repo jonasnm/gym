@@ -43,10 +43,10 @@ class AnasPatient(hovorka_cambridge.HovorkaCambridgeBase):
         self.insulinOnBoard = np.zeros(1)
 
         # Initialize sensor model
-        self.CGMlambda = 15.96    # Johnson parameter of recalibrated and synchronized sensor error.
-        self.CGMepsilon = -5.471  # Johnson parameter of recalibrated and synchronized sensor error.
-        self.CGMdelta = 1.6898    # Johnson parameter of recalibrated and synchronized sensor error.
-        self.CGMgamma = -0.5444   # Johnson parameter of recalibrated and synchronized sensor error.
+        # self.CGMlambda = 15.96    # Johnson parameter of recalibrated and synchronized sensor error.
+        # self.CGMepsilon = -5.471  # Johnson parameter of recalibrated and synchronized sensor error.
+        # self.CGMdelta = 1.6898    # Johnson parameter of recalibrated and synchronized sensor error.
+        # self.CGMgamma = -0.5444   # Johnson parameter of recalibrated and synchronized sensor error.
         self.CGMerror = 0
         self.sensor_noise = np.random.randn(1)
         # self.CGMaux = []
@@ -65,9 +65,9 @@ class AnasPatient(hovorka_cambridge.HovorkaCambridgeBase):
 
 
         if bg_init_flag == 'random':
-            self.init_basal = np.random.choice(np.linspace(init_basal_optimal-2, init_basal_optimal, 10))
+            self.init_basal = np.random.choice(np.linspace(init_basal_optimal[0]-2, init_basal_optimal[0], 10))
         elif bg_init_flag == 'fixed':
-            self.init_basal = init_basal_optimal
+            self.init_basal = init_basal_optimal[0]
 
         # Flag for manually resetting the init
         self.reset_basal_manually = None
@@ -100,7 +100,7 @@ class AnasPatient(hovorka_cambridge.HovorkaCambridgeBase):
 
         # State is BG, simulation_state is parameters of hovorka model
         initial_bg = X0[-1] * 18
-        initial_insulin = np.ones(4) * self.init_basal_optimal
+        initial_insulin = np.ones(4) * self.init_basal_optimal[0]
         initial_iob = np.zeros(1)
         self.state = np.concatenate([np.repeat(initial_bg, self.simulation_time), initial_insulin, initial_iob, np.zeros(1)])
 
