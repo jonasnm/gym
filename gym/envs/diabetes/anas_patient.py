@@ -102,7 +102,7 @@ class AnasPatient(hovorka_cambridge.HovorkaCambridgeBase):
         initial_bg = X0[-1] * 18
         initial_insulin = np.ones(4) * self.init_basal_optimal[0]
         initial_iob = np.zeros(1)
-        self.state = np.concatenate([np.repeat(initial_bg, self.simulation_time), initial_insulin, initial_iob, np.zeros(1)])
+        self.state = np.concatenate([np.repeat(initial_bg, self.stepsize), initial_insulin, initial_iob, np.zeros(1)])
 
         self.simulation_state = X0
 
