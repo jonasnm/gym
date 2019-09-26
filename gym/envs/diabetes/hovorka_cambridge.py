@@ -141,7 +141,7 @@ class HovorkaCambridgeBase(gym.Env):
         initial_iob = np.zeros(1)
 
         # Initial state
-        self.state = np.concatenate([np.repeat(initial_bg, self.simulation_time), initial_insulin, initial_iob, np.zeros(1)])
+        self.state = np.concatenate([np.repeat(initial_bg, self.stepsize), initial_insulin, initial_iob, np.zeros(1)])
 
         self.simulation_state = X0
 
