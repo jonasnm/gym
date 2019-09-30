@@ -61,13 +61,13 @@ class AnasPatient(hovorka_cambridge.HovorkaCambridgeBase):
         self.init_basal_optimal = init_basal_optimal
         self.bolus = carb_factor
 
-        self.action_space = spaces.Box(0, 2*self.init_basal_optimal[0], (1,), dtype=np.float32)
+        self.action_space = spaces.Box(0, 2*self.init_basal_optimal, (1,), dtype=np.float32)
 
 
         if bg_init_flag == 'random':
-            self.init_basal = np.random.choice(np.linspace(init_basal_optimal[0]-2, init_basal_optimal[0], 10))
+            self.init_basal = np.random.choice(np.linspace(init_basal_optimal-2, init_basal_optimal, 10))
         elif bg_init_flag == 'fixed':
-            self.init_basal = init_basal_optimal[0]
+            self.init_basal = init_basal_optimal
 
         # Flag for manually resetting the init
         self.reset_basal_manually = None
@@ -100,7 +100,7 @@ class AnasPatient(hovorka_cambridge.HovorkaCambridgeBase):
 
         # State is BG, simulation_state is parameters of hovorka model
         initial_bg = X0[-1] * 18
-        initial_insulin = np.ones(4) * self.init_basal_optimal[0]
+        initial_insulin = np.ones(4) * self.init_basal_optimal
         initial_iob = np.zeros(1)
         self.state = np.concatenate([np.repeat(initial_bg, self.stepsize), initial_insulin, initial_iob, np.zeros(1)])
 
