@@ -56,7 +56,7 @@ class AnasPatient(hovorka_cambridge.HovorkaCambridgeBase):
         # Anas patient parameters
         # =======================
         P, init_basal, carb_factor, _ = matlab_to_python(patient_number)
-        init_basal_optimal = init_basal
+        init_basal_optimal = init_basal[0]
         self.P = P
         self.init_basal_optimal = init_basal_optimal
         self.bolus = carb_factor
