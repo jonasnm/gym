@@ -314,7 +314,7 @@ class HovorkaCambridgeBase(gym.Env):
 
         # Recording bg history for plotting and insulin for the state space
         self.bg_history = np.concatenate([self.bg_history, bg])
-        self.insulin_history = np.concatenate([self.insulin_history, insulin_rate])
+        self.insulin_history = np.concatenate([self.insulin_history, action])
 
         # Miguel: What is this?
         # self.insulinOnBoard = np.zeros(1)
@@ -341,20 +341,22 @@ class HovorkaCambridgeBase(gym.Env):
         # ====================================================================================
 
         if not done:
-            if self.reward_flag != 'gaussian_with_insulin':
-                reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108)
-            else:
-                reward = rewardFunction.calculate_reward(np.array(bg), 'gaussian_with_insulin', 108, action)
+            reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108, action)
+            # if self.reward_flag != 'gaussian_with_insulin':
+            #     reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108)
+            # else:
+            #     reward = rewardFunction.calculate_reward(np.array(bg), 'gaussian_with_insulin', 108, action)
 
         elif self.steps_beyond_done is None:
             # Blood glucose below zero -- simulation out of bounds
             self.steps_beyond_done = 0
             # reward = 0.0
             # reward = -1000
-            if self.reward_flag != 'gaussian_with_insulin':
-                reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108)
-            else:
-                reward = rewardFunction.calculate_reward(np.array(bg), 'gaussian_with_insulin', 108, action)
+            reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108, action)
+            # if self.reward_flag != 'gaussian_with_insulin':
+            #     reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108)
+            # else:
+            #     reward = rewardFunction.calculate_reward(np.array(bg), 'gaussian_with_insulin', 108, action)
         else:
             if self.steps_beyond_done == 0:
                 logger.warning("You are calling 'step()' even though this environment has already returned done = True. You should always call 'reset()' once you receive 'done = True' -- any further steps are undefined behavior.")
