@@ -189,7 +189,7 @@ class HovorkaCambridgeBase(gym.Env):
         this is only used for inherited classes'''
 
         # Default reward is the asymmetric reward
-        reward_flag = 'asymmetric'
+        reward_flag = 'asy_insu'
 
         # bg is randomly initialized per episode by default
         bg_init_flag = 'random'
@@ -341,22 +341,15 @@ class HovorkaCambridgeBase(gym.Env):
         # ====================================================================================
 
         if not done:
-            reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108, action)
-            # if self.reward_flag != 'gaussian_with_insulin':
-            #     reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108)
-            # else:
-            #     reward = rewardFunction.calculate_reward(np.array(bg), 'gaussian_with_insulin', 108, action)
+            reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108, action, self.init_basal_optimal)
 
         elif self.steps_beyond_done is None:
             # Blood glucose below zero -- simulation out of bounds
             self.steps_beyond_done = 0
             # reward = 0.0
             # reward = -1000
-            reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108, action)
-            # if self.reward_flag != 'gaussian_with_insulin':
-            #     reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108)
-            # else:
-            #     reward = rewardFunction.calculate_reward(np.array(bg), 'gaussian_with_insulin', 108, action)
+            reward = rewardFunction.calculate_reward(np.array(bg), self.reward_flag, 108, action, self.init_basal_optimal)
+            
         else:
             if self.steps_beyond_done == 0:
                 logger.warning("You are calling 'step()' even though this environment has already returned done = True. You should always call 'reset()' once you receive 'done = True' -- any further steps are undefined behavior.")

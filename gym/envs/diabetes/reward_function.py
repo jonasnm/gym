@@ -7,7 +7,7 @@ class RewardFunction:
         # self.tir = 0
         # self.reward = []
 
-    def calculate_reward(self, blood_glucose_level, reward_flag='absolute', bg_ref=108, action=None, blood_glucose_level_start=None):
+    def calculate_reward(self, blood_glucose_level, reward_flag='absolute', bg_ref=108, action=None, basal=None, blood_glucose_level_start=None):
         """
         Calculating rewards for the given blood glucose level
         """
@@ -183,6 +183,7 @@ class RewardFunction:
             severe_low_bg = 54
             low_bg = 72
             high_bg = 180
+            alpha = .3
             reward_aux = []
 
             # if np.min(blood_glucose_level) < severe_low_bg:
@@ -208,11 +209,12 @@ class RewardFunction:
                     # self.tir = self.tir + 1
                 # else:
                 elif high_bg < blood_glucose_level[i]:
-                    reward_aux.append(0)
+                    reward_aux.append(-1)
                     # reward_aux.append(-9)
                     # self.tir = 0
 
-            reward = reward_aux
+            reward_ins = (-1/(2*basal)) * action
+
+            reward = alpha * np.mean(reward_aux) + (1 - alpha) * reward_ins
 
         return reward
-
