@@ -183,7 +183,7 @@ class RewardFunction:
             severe_low_bg = 54
             low_bg = 72
             high_bg = 180
-            alpha = .3
+            alpha = .7
             reward_aux = []
 
             # if np.min(blood_glucose_level) < severe_low_bg:
@@ -212,9 +212,13 @@ class RewardFunction:
                     reward_aux.append(-1)
                     # reward_aux.append(-9)
                     # self.tir = 0
-
+            # 2im1_0i0 reward = -1 when 2*basal and reward = 0 when 0 insulin        
             reward_ins = (-1/(2*basal)) * action
-
+            # 2i0_0i1 reward = 0 when 2*basal and reward = 1 when 0 insulin
+            # reward_ins = ((-1/(2*basal)) * action) + 1
+            # 2im1_0i1 reward = -1 when 2*basal and reward = 1 when 0 insulin
+            # reward_ins = ((-1/basal) * action) + 1
+            
             reward = alpha * np.mean(reward_aux) + (1 - alpha) * reward_ins
 
         return reward

@@ -64,6 +64,7 @@ class HovorkaCambridgeBase(gym.Env):
 
         # Bolus carb factor -- [g/U]
         self.bolus = 30
+        # self.bolus = 25
 
         ## Loading variable parameters -- used if environment is extended
         reward_flag, bg_init_flag = self._update_parameters()
@@ -189,7 +190,7 @@ class HovorkaCambridgeBase(gym.Env):
         this is only used for inherited classes'''
 
         # Default reward is the asymmetric reward
-        reward_flag = 'asy_insu'
+        reward_flag = 'asymmetric'
 
         # bg is randomly initialized per episode by default
         bg_init_flag = 'random'
