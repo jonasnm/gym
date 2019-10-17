@@ -410,11 +410,11 @@ class HovorkaCambridgeBase(gym.Env):
         self.num_iters = 0
 
 
-        # changing observation space if simulation time is changed -- This is slow!
-        # if self.simulation_time != 30:
-        # if self.stepsize != 1:
-            # observation_space_shape = int(self.stepsize + 4 + 1)
-            # self.observation_space = spaces.Box(0, 500, (observation_space_shape,), dtype=np.float32)
+        changing observation space if simulation time is changed -- This is slow!
+        if self.simulation_time != 30:
+        if self.stepsize != 1:
+            observation_space_shape = int(self.stepsize + 4 + 1)
+            self.observation_space = spaces.Box(0, 500, (observation_space_shape,), dtype=np.float32)
 
 
         self.steps_beyond_done = None

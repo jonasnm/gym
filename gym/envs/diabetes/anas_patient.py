@@ -135,3 +135,57 @@ class AnasPatient(hovorka_cambridge.HovorkaCambridgeBase):
         self.reward_flag = reward_flag
 
         self.steps_beyond_done = None
+
+
+    def reset(self):
+        ''' Basically a copy of the _init function
+
+        '''
+
+        # Reset bolus history
+        self.bolusHistoryIndex = 0
+        self.bolusHistoryValue = []
+        self.bolusHistoryTime = []
+        self.insulinOnBoard = np.zeros(1)
+
+        # Reset sensor noise model -- Miguel: Make 
+        # self.CGMerror = 0
+        self.sensor_noise = np.random.rand(1)
+        # self.CGMaux = []
+
+        if self.reset_basal_manually is None:
+            self.init_basal = np.random.choice(np.linspace(self.init_basal_optimal-2, self.init_basal_optimal, 10))
+        else:
+            self.init_basal = self.reset_basal_manually
+
+        P = self.P
+        initial_pars = (self.init_basal, 0, P)
+
+        X0 = fsolve(hovorka_model_tuple, np.zeros(11), args=initial_pars)
+        self.X0 = X0
+        self.integrator.set_initial_value(self.X0, 0)
+
+        # State is BG, simulation_state is parameters of hovorka model
+        initial_bg = X0[-1] * 18
+        # initial_bg = 106
+        # initial_insulin = np.zeros(4)
+        initial_insulin = np.ones(4) * self.init_basal_optimal
+        initial_iob = np.zeros(1)
+        self.state = np.concatenate([np.repeat(initial_bg, self.stepsize), initial_insulin, initial_iob, np.zeros(1)])
+
+        self.simulation_state = X0
+        self.bg_history = []
+        self.insulin_history = initial_insulin
+
+        self.num_iters = 0
+
+
+        # changing observation space if simulation time is changed -- This is slow!
+        if self.simulation_time != 30:
+        if self.stepsize != 1:
+            observation_space_shape = int(self.stepsize + 4 + 1)
+            self.observation_space = spaces.Box(0, 500, (observation_space_shape,), dtype=np.float32)
+
+
+        self.steps_beyond_done = None
+        return np.array(self.state)
