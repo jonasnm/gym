@@ -254,17 +254,14 @@ class HovorkaCambridgeBase(gym.Env):
                     self.insulinOnBoard = self.insulinOnBoard + self.bolusHistoryValue[b] * self.scalableExpIOB(self.num_iters - self.bolusHistoryTime[b], 75, 300)
 
             # If there is a meal, give a bolus
-            if self.meal_indicator[self.num_iters] > 0:
-                insulin_rate = action + np.round(max(self.meal_indicator[self.num_iters] * (180 / self.bolus), 0), 1)
-            else:
-                insulin_rate = action
+            insulin_rate = action + self.bolus
 
-            bolus_given =  bolus_given + self.meal_indicator[self.num_iters] * (180 / self.bolus)
+            bolus_given =  self.bolus
 
             # Add given bolus to history
             if self.meal_indicator[self.num_iters] > 0:
                 self.bolusHistoryIndex = self.bolusHistoryIndex + 1
-                self.bolusHistoryValue.append(self.meal_indicator[self.num_iters] * (180/self.bolus))
+                self.bolusHistoryValue.append(self.bolus)
                 self.bolusHistoryTime.append(self.num_iters)
 
 
