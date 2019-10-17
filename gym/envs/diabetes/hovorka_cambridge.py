@@ -256,7 +256,7 @@ class HovorkaCambridgeBase(gym.Env):
             # If there is a meal, give a bolus
             insulin_rate = action + self.bolus
 
-            bolus_given =  self.bolus
+            bolus_given =  np.array([self.bolus])
 
             # Add given bolus to history
             if self.meal_indicator[self.num_iters] > 0:
