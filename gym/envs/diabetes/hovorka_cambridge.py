@@ -254,7 +254,7 @@ class HovorkaCambridgeBase(gym.Env):
                     self.insulinOnBoard = self.insulinOnBoard + self.bolusHistoryValue[b] * self.scalableExpIOB(self.num_iters - self.bolusHistoryTime[b], 75, 300)
 
             # If there is a meal, give a bolus
-            insulin_rate = action + self.bolus
+            insulin_rate = action + ((self.meal_indicator[self.num_iters]>0) * self.bolus)
 
             bolus_given =  np.array([self.bolus])
 
