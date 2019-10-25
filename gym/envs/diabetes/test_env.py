@@ -14,4 +14,4 @@ for i in range(72):
     # Step for the minimal/hovorka model
     s, r, d, i = env.step(np.array([env.env.init_basal_optimal]))
 
-env.render()
+# env.render()

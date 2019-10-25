@@ -230,6 +230,11 @@ class HovorkaCambridgeBase(gym.Env):
         Take action. In the diabetes simulation this means increase, decrease or do nothing
         to the insulin to carb ratio (bolus).
         """
+
+        # if type(action).__module__ != np.__name__:
+        # if not isinstance(action, np.ndarray):
+        # action = np.array([action])
+
         if action > self.action_space.high:
             action = self.action_space.high
         elif action < self.action_space.low:
@@ -255,6 +260,7 @@ class HovorkaCambridgeBase(gym.Env):
                     self.insulinOnBoard = self.insulinOnBoard + self.bolusHistoryValue[b] * self.scalableExpIOB(self.num_iters - self.bolusHistoryTime[b], 75, 300)
 
             # If there is a meal, give a bolus
+            # print("numero iter", self.num_iters)
             if self.meal_indicator[self.num_iters] > 0:
                 insulin_rate = action + np.round(max(self.meal_indicator[self.num_iters] * (180 / self.bolus), 0), 1)
             else:
