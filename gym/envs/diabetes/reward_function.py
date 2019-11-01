@@ -88,7 +88,8 @@ class RewardFunction:
             trgt = 6 #bg_ref/18? target bg is 6 mmol/l in Hovorka 2014
 
             # starting state added as input to calculate_reward
-            y0 = blood_glucose_level_start/18
+            # y0 = blood_glucose_level_start/18
+            y0 = blood_glucose_level[0]/18
 
             # time until blood glucose has decreased to trgt+2 if y0 > trgt+2
             t1 = np.max((y0-trgt-2)/2,0)
@@ -220,5 +221,10 @@ class RewardFunction:
             # reward_ins = ((-1/basal) * action) + 1
             
             reward = alpha * np.mean(reward_aux) + (1 - alpha) * reward_ins
+
+        elif reward_flag == 'risk':
+            ''' Risk cost function '''
+
+            reward = -10*(1.509 * ((np.log(blood_glucose_level))**1.084 - 5.381))**2
 
         return reward
