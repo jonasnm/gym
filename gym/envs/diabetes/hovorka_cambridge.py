@@ -234,7 +234,7 @@ class HovorkaCambridgeBase(gym.Env):
         elif action < self.action_space.low:
             action = self.action_space.low
 
-        # assert self.action_space.contains(action), "%r (%s) invalid"%(action, type(action))
+        assert self.action_space.contains(action), "%r (%s) invalid"%(action, type(action))
 
         self.integrator.set_initial_value(self.simulation_state, self.num_iters)
 
