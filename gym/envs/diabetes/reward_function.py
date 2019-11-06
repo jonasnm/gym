@@ -7,7 +7,7 @@ class RewardFunction:
         # self.tir = 0
         # self.reward = []
 
-    def calculate_reward(self, blood_glucose_level, reward_flag='absolute', bg_ref=108, action=None, blood_glucose_level_start=None):
+    def calculate_reward(self, blood_glucose_level, reward_flag='absolute', bg_ref=108, action=None, basal=None, blood_glucose_level_start=None):
         """
         Calculating rewards for the given blood glucose level
         """
@@ -88,7 +88,8 @@ class RewardFunction:
             trgt = 6 #bg_ref/18? target bg is 6 mmol/l in Hovorka 2014
 
             # starting state added as input to calculate_reward
-            y0 = blood_glucose_level_start/18
+            # y0 = blood_glucose_level_start/18
+            y0 = blood_glucose_level[0]/18
 
             # time until blood glucose has decreased to trgt+2 if y0 > trgt+2
             t1 = np.max((y0-trgt-2)/2,0)
@@ -177,6 +178,53 @@ class RewardFunction:
                     # self.tir = 0
 
             reward = reward_aux
+            
+        elif reward_flag == 'asy_insu':
+            ''' Asymmetric reward function with insulin constraint '''
+            severe_low_bg = 54
+            low_bg = 72
+            high_bg = 180
+            alpha = .7
+            reward_aux = []
+
+            # if np.min(blood_glucose_level) < severe_low_bg:
+            for i in range(len(blood_glucose_level)):
+                if blood_glucose_level[i] < severe_low_bg:
+                    reward_aux.append(-100)
+                    # reward_aux.append(-10)
+                    # self.tir = 0
+                # elif severe_low_bg <= blood_glucose_level < low_bg:
+                elif severe_low_bg <= blood_glucose_level[i] < low_bg:
+                    reward_aux.append(np.exp((np.log(140.9)/low_bg) * blood_glucose_level[i]) - 140.9)
+                    # reward_aux.append(np.exp((np.log(19.157) / low_bg) * blood_glucose_level[i]) - 19.157)
+                    # self.tir = 0
+                # elif low_bg <= blood_glucose_level < bg_ref:
+                elif low_bg <= blood_glucose_level[i] < bg_ref:
+                    reward_aux.append(((1 / 36) * blood_glucose_level[i] - 2))
+                    # reward_aux.append(((1/36)*blood_glucose_level[i] - 2) + self.tir)
+                    # self.tir = self.tir + 1
+                # elif bg_ref <= blood_glucose_level <= high_bg:
+                elif bg_ref <= blood_glucose_level[i] <= high_bg:
+                    reward_aux.append(((-1 / 72) * blood_glucose_level[i] + (5 / 2)))
+                    # reward_aux.append(((-1/72)*blood_glucose_level[i] + (5/2)) + self.tir)
+                    # self.tir = self.tir + 1
+                # else:
+                elif high_bg < blood_glucose_level[i]:
+                    reward_aux.append(-1)
+                    # reward_aux.append(-9)
+                    # self.tir = 0
+            # 2im1_0i0 reward = -1 when 2*basal and reward = 0 when 0 insulin        
+            reward_ins = (-1/(2*basal)) * action
+            # 2i0_0i1 reward = 0 when 2*basal and reward = 1 when 0 insulin
+            # reward_ins = ((-1/(2*basal)) * action) + 1
+            # 2im1_0i1 reward = -1 when 2*basal and reward = 1 when 0 insulin
+            # reward_ins = ((-1/basal) * action) + 1
+            
+            reward = alpha * np.mean(reward_aux) + (1 - alpha) * reward_ins
+
+        elif reward_flag == 'risk':
+            ''' Risk cost function '''
+
+            reward = -10*(1.509 * ((np.log(blood_glucose_level))**1.084 - 5.381))**2
 
         return reward
-
