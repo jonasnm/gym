@@ -9,6 +9,12 @@ register(
     # The true max episode steps are 72, but that becomes a bug in the TimeLimit wrapper..
     max_episode_steps = 200,
 )
+register(
+    id = 'HovorkaDiscrete-v0',
+    entry_point = 'gym.envs.diabetes.hovorka_discrete:HovorkaDiscrete',
+    # The true max episode steps are 72, but that becomes a bug in the TimeLimit wrapper..
+    max_episode_steps = 200,
+)
 
 # Algorithmic
 # ----------------------------------------
