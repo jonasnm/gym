@@ -190,7 +190,7 @@ class HovorkaCambridgeBase(gym.Env):
         this is only used for inherited classes'''
 
         # Default reward is the asymmetric reward
-        reward_flag = 'hovorka'
+        reward_flag = 'asymmetric'
 
         # bg is randomly initialized per episode by default
         bg_init_flag = 'random'
