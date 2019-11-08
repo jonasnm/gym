@@ -229,9 +229,12 @@ class HovorkaCambridgeBase(gym.Env):
         Take action. In the diabetes simulation this means increase, decrease or do nothing
         to the insulin to carb ratio (bolus).
         """
-        if action > self.action_space.high:
-            action = self.action_space.high
-        elif action < self.action_space.low:
+        # if action > self.action_space.high:
+        #     action = self.action_space.high
+        # elif action < self.action_space.low:
+        #     action = self.action_space.low
+            
+        if action < self.action_space.low:
             action = self.action_space.low
 
         # assert self.action_space.contains(action), "%r (%s) invalid"%(action, type(action))
@@ -255,6 +258,7 @@ class HovorkaCambridgeBase(gym.Env):
 
             # If there is a meal, give a bolus
             insulin_rate = action + ((self.meal_indicator[self.num_iters]>0) * self.bolus)
+            # insulin_rate = action + self.bolus
 
             bolus_given =  np.array([self.bolus])
 
@@ -409,7 +413,7 @@ class HovorkaCambridgeBase(gym.Env):
 
         # changing observation space if simulation time is changed -- This is slow!
         if self.simulation_time != 30:
-            observation_space_shape = int(self.stepsize + 4 + 1)
+            observation_space_shape = int(self.stepsize + 4 + 2)
             self.observation_space = spaces.Box(0, 500, (observation_space_shape,), dtype=np.float32)
 
 
