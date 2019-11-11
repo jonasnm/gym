@@ -453,7 +453,7 @@ class HovorkaDiscrete(gym.Env):
 
             return None
         else:
-            super(HovorkaCambridgeBase, self).render(mode=mode) # just raise an exception
+            super(HovorkaDiscrete, self).render(mode=mode) # just raise an exception
 
             plt.ion()
             plt.plot(self.bg_history)
