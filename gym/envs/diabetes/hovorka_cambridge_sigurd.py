@@ -292,7 +292,7 @@ class HovorkaCambridgeBase_Sigurd(gym.Env):
         return np.array(self.state), np.mean(reward), done, {}
 
 
-   def reset(self):
+    def reset(self):
         '''
         This is basically a copy of the init function
         '''
