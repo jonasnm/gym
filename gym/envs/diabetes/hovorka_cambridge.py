@@ -314,6 +314,9 @@ class HovorkaCambridgeBase(gym.Env):
 
         self.num_iters = 0
 
+        eating_time = 1
+        meals, meal_indicator = meal_generator(eating_time=eating_time, premeal_bolus_time=0)
+
 
         # changing observation space if simulation time is changed
         # if self.simulation_time != 30:
